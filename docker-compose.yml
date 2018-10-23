@@ -1,0 +1,43 @@
+version: '2'
+
+services:
+    db:
+        container_name: kiwi_db
+        image: centos/mariadb
+        volumes:
+            - db_data:/var/lib/mysql
+            - /etc/timezone:/etc/timezone:ro
+            - /etc/localtime:/etc/localtime:ro
+        restart: always
+        environment:
+            MYSQL_ROOT_PASSWORD: kiwi-1s-aw3s0m3
+            MYSQL_DATABASE: kiwi
+            MYSQL_USER: kiwi
+            MYSQL_PASSWORD: kiwi
+            MYSQL_CHARSET: utf8
+            MYSQL_COLLATION: utf8_unicode_ci
+            TZ: Asia/Hong_Kong
+
+    web:
+        container_name: kiwi_web
+        depends_on:
+            - db
+        restart: always
+        image: advhkjw/kiwitcms_google_cloud:latest
+        ports:
+            - 8530:8080
+            - 8531:8443
+        volumes:
+            - uploads:/Kiwi/uploads:Z
+            - /etc/timezone:/etc/timezone:ro
+            - /etc/localtime:/etc/localtime:ro
+        environment:
+            KIWI_DB_HOST: db
+            KIWI_DB_PORT: 3306
+            KIWI_DB_NAME: kiwi
+            KIWI_DB_USER: kiwi
+            KIWI_DB_PASSWORD: kiwi
+            TZ: Asia/Hong_Kong
+volumes:
+    db_data:
+    uploads:
